@@ -15,14 +15,20 @@ import static java.util.Objects.requireNonNull;
 @Service
 class ProductRepositoryImpl implements ProductRepository {
 
-    private final Map<Integer, Product> productMap = List.of(
-            new Product(1, "чай", 15),
-            new Product(2, "кофе", 75),
-            new Product(3, "кефир", 50),
-            new Product(4, "молоко", 70),
-            new Product(5, "смуззи", 150),
-            new Product(6, "хрен на постном масле", 0)
-    ).stream().collect(Collectors.toMap(Product::getId, Function.identity()));
+    private final Map<Integer, Product> productMap;
+    private final ProductIdSequence sequence;
+
+    public ProductRepositoryImpl(ProductIdSequence sequence) {
+        productMap = List.of(
+                new Product(sequence.getNext(), "чай", 15),
+                new Product(sequence.getNext(), "кофе", 75),
+                new Product(sequence.getNext(), "кефир", 50),
+                new Product(sequence.getNext(), "молоко", 70),
+                new Product(sequence.getNext(), "смуззи", 150),
+                new Product(sequence.getNext(), "хрен на постном масле", 0)
+        ).stream().collect(Collectors.toConcurrentMap(Product::getId, Function.identity()));
+        this.sequence = sequence;
+    }
 
     @Override
     public Collection<Product> all() {
@@ -33,4 +39,20 @@ class ProductRepositoryImpl implements ProductRepository {
     public Optional<Product> find(@NonNull Integer id) {
         return Optional.ofNullable(productMap.get(requireNonNull(id, "id")));
     }
+
+    @Override
+    public boolean replace(Product product) {
+        return productMap.replace(product.getId(), product) != null;
+    }
+
+    @Override
+    public void newOne(Product product) {
+        productMap.compute(sequence.getNext(), (id, values) -> Product.builder(product).withId(id).build());
+    }
+
+    public boolean remove(Integer id) {
+        return productMap.remove(id) != null;
+    }
+
+
 }

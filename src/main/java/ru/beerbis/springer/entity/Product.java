@@ -35,4 +35,39 @@ public class Product {
     public Integer getCost() {
         return cost;
     }
+
+    public static Builder builder(Product product) {
+        return new Builder()
+                .withId(product.id)
+                .withTitle(product.title)
+                .withCost(product.cost);
+    }
+
+    static class Builder {
+        private Integer id;
+        private String title;
+        private Integer cost;
+
+        private Builder() {
+        }
+
+        public Builder withId(Integer value){
+            id = value;
+            return this;
+        }
+
+        public Builder withTitle(String value){
+            title = value;
+            return this;
+        }
+
+        public Builder withCost(Integer value){
+            cost = value;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(id, title, cost);
+        }
+    }
 }
