@@ -8,4 +8,7 @@ import java.util.Optional;
 public interface ProductRepository {
     Collection<Product> all();
     Optional<Product> find(@NonNull Integer id);
+    boolean replace(Product product);
+    void newOne(Product product);
+    boolean remove(Integer id);
 }
