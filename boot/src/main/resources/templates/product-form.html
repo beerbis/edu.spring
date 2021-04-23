@@ -1,0 +1,29 @@
+<!--/*@thymesVar id="product" type="ru.beerbis.springer.entity.Product"*/-->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+  <title th:text="'Позиция ' + ${product.title}"/>
+  <style>
+    div {
+      display: inline-block;
+    }
+    .caption {
+      width: 120px;
+    }
+  </style>
+</head>
+
+<body>
+<form th:action="@{/goods/save}" th:object="${product}" method="post">
+  <input type="hidden" th:field="*{id}"/><br>
+
+  <div class="caption">наименование: </div>
+  <input type="text" th:field="*{title}" autofocus/><br>
+
+  <div class="caption">цена:</div>
+  <input type="text" th:field="*{cost}"/><br>
+
+  <button type="submit">Save</button>
+</form>
+</body>
+</html>

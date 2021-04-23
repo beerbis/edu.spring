@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Ассортимент</title>
+  <style>
+    th {
+      border-bottom: black thin dashed;
+    }
+    td {
+      border-right: black thin dashed;
+      padding: 0 5px 0 10px;
+    }
+    .numeric {
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+<h1>Все известные позиции:</h1>
+  <table width="640px">
+    <tr>
+      <th>id</th>
+      <th>наименование</th>
+      <th>цена</th>
+      <th></th>
+    </tr>
+    <tr th:each="product : ${products}">
+      <td th:text="${product.id}" class="numeric"/>
+      <td th:text="${product.title}"/>
+      <td th:text="${product.cost} + ' &#20803;'" class="numeric"/>
+      <td>
+        <a th:href="'/goods/id' + ${product.id} + '/edit'">edit</a>,
+        <a th:href="'/goods/id' + ${product.id} + '/del'">del</a>
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td><a href="/goods/new">new</a></td>
+    </tr>
+  </table>
+</body>
+</html>
