@@ -28,7 +28,13 @@ public class GoodsController {
     @GetMapping("/id{id}/edit")
     public String edit(Model model,
                        @PathVariable Integer id) {
-        model.addAttribute("product", repository.find(id).get());
+        var product = repository.find(id);
+        if (product.isEmpty()) {
+            model.addAttribute("id", id);
+            return "404";
+        }
+
+        model.addAttribute("product", product.orElseThrow());
         return "product-form";
     }
 
