@@ -19,7 +19,7 @@ public class GoodsController {
         this.repository = repository;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public String listAll(Model model) {
         model.addAttribute("products", repository.all());
         return "goods";
@@ -48,7 +48,7 @@ public class GoodsController {
             return "404";
         };
         model.addAttribute("products", repository.all());
-        return "redirect:/goods/";
+        return "redirect:/goods";
     }
 
     @GetMapping("/new")
@@ -65,6 +65,6 @@ public class GoodsController {
             return "404";
         };
         model.addAttribute("products", repository.all());
-        return "redirect:/goods/";
+        return "redirect:/goods";
     }
 }
