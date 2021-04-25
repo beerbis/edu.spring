@@ -42,7 +42,7 @@ public class GoodsController {
             return "404";
         };
         model.addAttribute("products", repository.all());
-        return "goods";
+        return "redirect:/goods/";
     }
 
     @GetMapping("/new")
@@ -59,6 +59,6 @@ public class GoodsController {
             return "404";
         };
         model.addAttribute("products", repository.all());
-        return "goods";
+        return "redirect:/goods/";
     }
 }
