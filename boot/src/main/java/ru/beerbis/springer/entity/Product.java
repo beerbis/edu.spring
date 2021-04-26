@@ -2,26 +2,41 @@ package ru.beerbis.springer.entity;
 
 import org.springframework.lang.NonNull;
 
+import javax.persistence.*;
+
 import static java.util.Objects.requireNonNull;
 
 /**
  * "Продукт"
  */
+@Entity
+@Table(name = "product")
+@NamedQueries({
+        @NamedQuery(name = "Product.all", query = "select p from Product p order by p.id"),
+        @NamedQuery(name = "Product.del", query = "delete from Product p where p.id = :id")
+})
 public class Product {
-    private final Integer id;
-    private final String title;
-    private final Integer cost;
+
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @Column(name = "id")
+    private Integer id;
+
+    @Column(name = "title")
+    private String title;
+
+    @Column(name = "cost")
+    private Integer cost;
+
+    protected Product() {
+    }
 
     public Product(@NonNull Integer id,
                    @NonNull String title,
                    @NonNull Integer cost) {
-        this.id = requireNonNull(id, "id");
-        this.title = requireNonNull(title, "title");
-        this.cost = requireNonNull(cost, "cost");
-
-        if (cost < 0) {
-            throw new IllegalArgumentException("cost may noy be negative, but: cost=" + cost);
-        }
+        this.id = id;
+        this.title = title;
+        this.cost = cost;
     }
 
     public Integer getId() {
@@ -36,38 +51,12 @@ public class Product {
         return cost;
     }
 
-    public static Builder builder(Product product) {
-        return new Builder()
-                .withId(product.id)
-                .withTitle(product.title)
-                .withCost(product.cost);
-    }
-
-    static class Builder {
-        private Integer id;
-        private String title;
-        private Integer cost;
-
-        private Builder() {
-        }
-
-        public Builder withId(Integer value){
-            id = value;
-            return this;
-        }
-
-        public Builder withTitle(String value){
-            title = value;
-            return this;
-        }
-
-        public Builder withCost(Integer value){
-            cost = value;
-            return this;
-        }
-
-        public Product build() {
-            return new Product(id, title, cost);
-        }
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", cost=" + cost +
+                '}';
     }
 }

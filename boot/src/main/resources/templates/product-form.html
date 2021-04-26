@@ -4,10 +4,8 @@
 <head>
   <title th:text="'Позиция ' + ${product.title}"/>
   <style>
-    div {
-      display: inline-block;
-    }
     .caption {
+      display: inline-block;
       width: 120px;
     }
   </style>
@@ -15,7 +13,7 @@
 
 <body>
 <form th:action="@{/goods/save}" th:object="${product}" method="post">
-  <input type="hidden" th:field="*{id}"/><br>
+  <input type="hidden" th:if="${id != null}" th:field="*{id}"/>
 
   <div class="caption">наименование: </div>
   <input type="text" th:field="*{title}" autofocus/><br>
