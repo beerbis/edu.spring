@@ -67,16 +67,21 @@ class ProductRepositoryImpl implements ProductRepository {
         }
     }
 
-    public boolean remove(Integer id) {
+    public boolean remove(@NonNull Integer id) {
+        requireNonNull(id, "id");
+        var product = entityManager.find(Product.class, id);
+        if (product == null) {
+            log.info("Product remove, not found: {}", id);
+            return false;
+        }
+
         var tr = entityManager.getTransaction();
         tr.begin();
         try {
-            var result = entityManager.createNamedQuery("Product.del")
-                    .setParameter("id", id)
-                    .executeUpdate();
+            entityManager.remove(product);
             tr.commit();
-            log.info("Product removed: {}", id);
-            return result == 1;
+            log.info("Product removed: {}", product);
+            return true;
         } catch (Exception e) {
             tr.rollback();
             throw e;

@@ -13,7 +13,6 @@ import static java.util.Objects.requireNonNull;
 @Table(name = "product")
 @NamedQueries({
         @NamedQuery(name = "Product.all", query = "select p from Product p order by p.id"),
-        @NamedQuery(name = "Product.del", query = "delete from Product p where p.id = :id")
 })
 public class Product {
 
