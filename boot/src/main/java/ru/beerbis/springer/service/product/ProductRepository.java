@@ -1,6 +1,7 @@
-package ru.beerbis.springer.entity;
+package ru.beerbis.springer.service.product;
 
 import org.springframework.lang.NonNull;
+import ru.beerbis.springer.entity.Product;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -9,6 +10,6 @@ public interface ProductRepository {
     Collection<Product> all();
     Optional<Product> find(@NonNull Integer id);
     boolean replace(Product product);
-    void newOne(Product product);
+    void save(Product product);
     boolean remove(Integer id);
 }

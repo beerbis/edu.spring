@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.beerbis.springer.entity.Product;
-import ru.beerbis.springer.entity.ProductRepository;
+import ru.beerbis.springer.service.product.ProductRepository;
 
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
-    private static Product newProductPlaceholder = new Product(-1, "новое новьё", 0);
+    private static Product newProductPlaceholder = new Product(null, "новое новьё", 0);
     private final ProductRepository repository;
 
     public GoodsController(ProductRepository repository) {
@@ -41,7 +41,7 @@ public class GoodsController {
     @PostMapping("/save")
     public String edit(Model model, Product product) {
         if (product.getId() == newProductPlaceholder.getId()) {
-            repository.newOne(product);
+            repository.save(product);
         } else
         if (!repository.replace(product))  {
             model.addAttribute("id", product.getId());
