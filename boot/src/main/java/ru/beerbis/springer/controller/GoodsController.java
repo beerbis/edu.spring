@@ -41,7 +41,7 @@ public class GoodsController {
     @PostMapping("/save")
     public String edit(Model model, Product product) {
         if (product.getId() == newProductPlaceholder.getId()) {
-            repository.persist(product);
+            repository.save(product);
         } else
         if (!repository.replace(product))  {
             model.addAttribute("id", product.getId());

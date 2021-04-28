@@ -1,18 +1,22 @@
 package ru.beerbis.springer.service;
 
+import org.hibernate.SessionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.annotation.PreDestroy;
 
 @Configuration
 public class DbConfig {
     @Bean
-    EntityManager entityManager() {
-        EntityManagerFactory factory = new org.hibernate.cfg.Configuration()
+    SessionFactory entityManager() {
+        return new org.hibernate.cfg.Configuration()
                 .configure("hibernate.cfg.xml")
                 .buildSessionFactory();
-        return factory.createEntityManager();
+    }
+
+    @PreDestroy
+    void closeEntityManagerFactory() {
+        entityManager().close();
     }
 }

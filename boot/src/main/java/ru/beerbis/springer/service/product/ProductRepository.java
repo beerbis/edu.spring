@@ -10,6 +10,6 @@ public interface ProductRepository {
     Collection<Product> all();
     Optional<Product> find(@NonNull Integer id);
     boolean replace(Product product);
-    void persist(Product product);
+    void save(Product product);
     boolean remove(Integer id);
 }

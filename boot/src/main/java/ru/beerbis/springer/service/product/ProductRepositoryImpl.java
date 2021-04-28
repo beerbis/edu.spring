@@ -1,14 +1,12 @@
 package ru.beerbis.springer.service.product;
 
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import ru.beerbis.springer.entity.Product;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -18,73 +16,66 @@ import static java.util.Objects.requireNonNull;
 class ProductRepositoryImpl implements ProductRepository {
 
     private final Logger log = LoggerFactory.getLogger(ProductRepositoryImpl.class);
-    private final EntityManager entityManager;
-    private final TypedQuery<Product> queryGetAll;
+    private final SessionFactory factory;
 
-    public ProductRepositoryImpl(
-            @Qualifier("entityManager") EntityManager entityManager) {
-        this.entityManager = entityManager;
-        queryGetAll = entityManager.createNamedQuery("Product.all", Product.class);
+    public ProductRepositoryImpl(SessionFactory factory) {
+        this.factory = factory;
     }
 
     @Override
     public Collection<Product> all() {
-        return queryGetAll.getResultList();
+        try (var session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            return session.createNamedQuery("Product.all", Product.class).getResultList();
+        }
     }
 
     @Override
     public Optional<Product> find(@NonNull Integer id) {
         requireNonNull(id, "id");
-        return Optional.ofNullable(entityManager.find(Product.class, id));
-    }
-
-    @Override
-    public boolean replace(Product product) {
-        var tr = entityManager.getTransaction();
-        tr.begin();
-        try {
-            var merged = entityManager.merge(product);
-            tr.commit();
-            log.info("Product updated: {}", product);
-            return true;
-        } catch (Exception e) {
-            tr.rollback();
-            throw e;
+        try (var session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            return Optional.ofNullable(session.find(Product.class, id));
         }
     }
 
     @Override
-    public void persist(Product product) {
-        var tr = entityManager.getTransaction();
-        tr.begin();
-        try {
-            entityManager.persist(product);
-            tr.commit();
+    public boolean replace(Product product) {
+        try (var session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            session.update(product);
+            session.getTransaction().commit();
+            log.info("Product updated: {}", product);
+            return true;
+        }
+    }
+
+    @Override
+    public void save(Product product) {
+        try (var session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            session.save(product);
+            session.getTransaction().commit();
             log.info("Product stored: {}", product);
-        } catch (Exception e) {
-            tr.rollback();
-            throw e;
         }
     }
 
     public boolean remove(@NonNull Integer id) {
         requireNonNull(id, "id");
-        var product = entityManager.find(Product.class, id);
-        if (product == null) {
-            log.info("Product remove, not found: {}", id);
-            return false;
-        }
+        try (var session = factory.getCurrentSession()) {
+            session.beginTransaction();
+            var updateCount = session.createNamedQuery("Product.del")
+                    .setParameter("id", id)
+                    .executeUpdate();
 
-        var tr = entityManager.getTransaction();
-        tr.begin();
-        try {
-            entityManager.remove(product);
-            tr.commit();
-            log.info("Product removed: {}", product);
+            if (updateCount == 0) {
+                log.info("Product remove, not found: {}", id);
+                return false;
+            }
+
+            session.getTransaction().commit();
+            log.info("Product removed: {}", id);
             return true;
-        } catch (Exception e) {
-            tr.rollback();
-            throw e;
         }
     }
 }
