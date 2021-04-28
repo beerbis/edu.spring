@@ -47,7 +47,7 @@ public class GoodsController {
             model.addAttribute("id", product.getId());
             return "404";
         };
-        model.addAttribute("products", repository.all());
+        
         return "redirect:/goods";
     }
 
@@ -64,7 +64,7 @@ public class GoodsController {
             model.addAttribute("id", id);
             return "404";
         };
-        model.addAttribute("products", repository.all());
+
         return "redirect:/goods";
     }
 }
