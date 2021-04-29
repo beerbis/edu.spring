@@ -6,7 +6,7 @@ import ru.beerbis.springer.entity.Product;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface ProductRepository {
+public interface ProductDao {
     Collection<Product> all();
     Optional<Product> find(@NonNull Integer id);
     boolean replace(Product product);

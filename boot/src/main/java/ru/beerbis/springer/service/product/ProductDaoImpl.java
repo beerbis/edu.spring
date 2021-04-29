@@ -13,12 +13,12 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 @Service
-class ProductRepositoryImpl implements ProductRepository {
+class ProductDaoImpl implements ProductDao {
 
-    private final Logger log = LoggerFactory.getLogger(ProductRepositoryImpl.class);
+    private final Logger log = LoggerFactory.getLogger(ProductDaoImpl.class);
     private final SessionFactory factory;
 
-    public ProductRepositoryImpl(SessionFactory factory) {
+    public ProductDaoImpl(SessionFactory factory) {
         this.factory = factory;
     }
 
