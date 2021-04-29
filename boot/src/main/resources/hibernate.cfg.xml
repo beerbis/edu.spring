@@ -16,5 +16,7 @@
         <property name="current_session_context_class">thread</property>
 
         <mapping class="ru.beerbis.springer.entity.Product"/>
+        <mapping class="ru.beerbis.springer.entity.Customer"/>
+        <mapping class="ru.beerbis.springer.entity.Purchase"/>
     </session-factory>
 </hibernate-configuration>
