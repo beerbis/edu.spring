@@ -15,4 +15,8 @@ public class BaseEntity<IdT extends Serializable> {
     public IdT getId() {
         return id;
     }
+
+    public void setId(IdT id) {
+        this.id = id;
+    }
 }
