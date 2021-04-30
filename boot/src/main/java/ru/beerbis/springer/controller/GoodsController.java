@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.beerbis.springer.entity.Product;
-import ru.beerbis.springer.service.product.ProductDao;
+import ru.beerbis.springer.dao.ProductDao;
 
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
-    private static Product newProductPlaceholder = new Product(null, "новое новьё", 0);
+    private static final Product newProductPlaceholder = new Product("новое новьё", 0);
     private final ProductDao productDao;
 
     public GoodsController(ProductDao productDao) {

@@ -16,12 +16,7 @@ import static java.util.Objects.requireNonNull;
         @NamedQuery(name = "Product.all", query = "select p from Product p order by p.id"),
         @NamedQuery(name = "Product.del", query = "delete from Product p where p.id = :id")
 })
-public class Product {
-
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id")
-    private Integer id;
+public class Product extends BaseEntity<Integer> {
 
     @Column(name = "title", nullable = false, unique = true)
     private String title;
@@ -38,10 +33,6 @@ public class Product {
         this.cost = cost;
     }
 
-    public Integer getId() {
-        return id;
-    }
-
     public String getTitle() {
         return title;
     }
@@ -53,7 +44,7 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", title='" + title + '\'' +
                 ", cost=" + cost +
                 '}';
