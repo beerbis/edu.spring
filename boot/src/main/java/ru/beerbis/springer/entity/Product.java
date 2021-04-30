@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 })
 public class Product extends BaseEntity<Integer> {
 
-    @Column(name = "title", nullable = false, unique = true)
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "cost", nullable = false)
