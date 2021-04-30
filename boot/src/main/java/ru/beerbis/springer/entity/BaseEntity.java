@@ -8,7 +8,8 @@ public class BaseEntity<IdT extends Serializable> {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    @Column(name = "id")
+    @Column(name = "id",
+            nullable = false)
     private IdT id;
 
     public IdT getId() {

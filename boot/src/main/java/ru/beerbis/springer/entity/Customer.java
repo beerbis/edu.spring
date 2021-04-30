@@ -6,12 +6,11 @@ import java.util.List;
 @Entity
 @Table(name = "customer",
         uniqueConstraints = {@UniqueConstraint(name = "UQ_CUSTOMER_NAME", columnNames = "name")})
-public class Customer {
-
-    @Id
-    @Column(name = "id",
-            nullable = false)
-    private Integer id;
+@NamedQueries({
+        @NamedQuery(name = "Customer.all", query = "select c from Customer c order by c.id"),
+        @NamedQuery(name = "Customer.del", query = "delete from Customer c where c.id = :id")
+})
+public class Customer extends BaseEntity<Integer> {
 
     @Column(name = "name",
             nullable = false)
@@ -21,10 +20,6 @@ public class Customer {
     private List<Purchase> purchases;
 
     protected Customer() {
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getName() {
@@ -38,7 +33,7 @@ public class Customer {
     @Override
     public String toString() {
         return "Customer{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", name='" + name + '\'' +
                 '}';
     }
