@@ -10,37 +10,27 @@ import static java.util.Objects.requireNonNull;
  * "Продукт"
  */
 @Entity
-@Table(name = "product")
+@Table(name = "product",
+        uniqueConstraints = {@UniqueConstraint(name = "UQ_PRODUCT_TITLE", columnNames = "title")})
 @NamedQueries({
         @NamedQuery(name = "Product.all", query = "select p from Product p order by p.id"),
         @NamedQuery(name = "Product.del", query = "delete from Product p where p.id = :id")
 })
-public class Product {
+public class Product extends BaseEntity<Integer> {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Id
-    @Column(name = "id")
-    private Integer id;
-
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "cost")
+    @Column(name = "cost", nullable = false)
     private Integer cost;
 
     protected Product() {
     }
 
-    public Product(@NonNull Integer id,
-                   @NonNull String title,
+    public Product(@NonNull String title,
                    @NonNull Integer cost) {
-        this.id = id;
         this.title = title;
         this.cost = cost;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public String getTitle() {
@@ -54,7 +44,7 @@ public class Product {
     @Override
     public String toString() {
         return "Product{" +
-                "id=" + id +
+                "id=" + getId() +
                 ", title='" + title + '\'' +
                 ", cost=" + cost +
                 '}';

@@ -7,28 +7,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.beerbis.springer.entity.Product;
-import ru.beerbis.springer.service.product.ProductRepository;
+import ru.beerbis.springer.dao.ProductDao;
 
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
-    private static Product newProductPlaceholder = new Product(null, "новое новьё", 0);
-    private final ProductRepository repository;
+    private static final Product newProductPlaceholder = new Product("новое новьё", 0);
+    private final ProductDao productDao;
 
-    public GoodsController(ProductRepository repository) {
-        this.repository = repository;
+    public GoodsController(ProductDao productDao) {
+        this.productDao = productDao;
     }
 
     @GetMapping
     public String listAll(Model model) {
-        model.addAttribute("products", repository.all());
+        model.addAttribute("products", productDao.all());
         return "goods";
     }
 
     @GetMapping("/id{id}/edit")
     public String edit(Model model,
                        @PathVariable Integer id) {
-        var product = repository.find(id);
+        var product = productDao.find(id);
         if (product.isEmpty()) {
             model.addAttribute("id", id);
             return "404";
@@ -41,9 +41,9 @@ public class GoodsController {
     @PostMapping("/save")
     public String edit(Model model, Product product) {
         if (product.getId() == newProductPlaceholder.getId()) {
-            repository.save(product);
+            productDao.save(product);
         } else
-        if (!repository.replace(product))  {
+        if (!productDao.replace(product))  {
             model.addAttribute("id", product.getId());
             return "404";
         };
@@ -60,7 +60,7 @@ public class GoodsController {
     @GetMapping("/id{id}/del")
     public String remove(Model model,
                          @PathVariable Integer id) {
-        if (!repository.remove(id)) {
+        if (!productDao.remove(id)) {
             model.addAttribute("id", id);
             return "404";
         };
