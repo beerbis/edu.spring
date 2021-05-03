@@ -1,0 +1,7 @@
+package ru.beerbis.datajpaexample.repo;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import ru.beerbis.datajpaexample.model.Product;
+
+public interface ProductRepo extends JpaRepository<Product, Integer> {
+}
