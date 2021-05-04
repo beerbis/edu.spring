@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.beerbis.springer.entity.Product;
-import ru.beerbis.springer.dao.ProductDao;
+import ru.beerbis.springer.model.Product;
+import ru.beerbis.springer.repo.ProductDao;
 
 @Controller
 @RequestMapping("/goods")
@@ -21,14 +21,14 @@ public class GoodsController {
 
     @GetMapping
     public String listAll(Model model) {
-        model.addAttribute("products", productDao.all());
+        model.addAttribute("products", productDao.findAll());
         return "goods";
     }
 
     @GetMapping("/id{id}/edit")
     public String edit(Model model,
                        @PathVariable Integer id) {
-        var product = productDao.find(id);
+        var product = productDao.findById(id);
         if (product.isEmpty()) {
             model.addAttribute("id", id);
             return "404";
@@ -39,14 +39,15 @@ public class GoodsController {
     }
 
     @PostMapping("/save")
-    public String edit(Model model, Product product) {
-        if (product.getId() == newProductPlaceholder.getId()) {
-            productDao.save(product);
-        } else
-        if (!productDao.replace(product))  {
-            model.addAttribute("id", product.getId());
-            return "404";
-        };
+    public String save(Model model, Product product) {
+//        if (product.getId() == newProductPlaceholder.getId()) {
+//            productDao.save(product);
+//        } else
+        productDao.save(product);
+//        if (!)  {
+//            model.addAttribute("id", product.getId());
+//            return "404";
+//        };
         
         return "redirect:/goods";
     }
@@ -60,10 +61,11 @@ public class GoodsController {
     @GetMapping("/id{id}/del")
     public String remove(Model model,
                          @PathVariable Integer id) {
-        if (!productDao.remove(id)) {
-            model.addAttribute("id", id);
-            return "404";
-        };
+        productDao.deleteById(id);
+//        if (!) {
+//            model.addAttribute("id", id);
+//            return "404";
+//        };
 
         return "redirect:/goods";
     }

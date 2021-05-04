@@ -1,4 +1,4 @@
-package ru.beerbis.springer.entity;
+package ru.beerbis.springer.model;
 
 import javax.persistence.*;
 import java.util.List;

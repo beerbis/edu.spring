@@ -2,8 +2,8 @@ package ru.beerbis.springer.service;
 
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Service;
-import ru.beerbis.springer.entity.Customer;
-import ru.beerbis.springer.entity.Product;
+import ru.beerbis.springer.model.Customer;
+import ru.beerbis.springer.model.Product;
 
 import java.util.List;
 
