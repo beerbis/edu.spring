@@ -61,11 +61,10 @@ public class GoodsController {
     @GetMapping("/id{id}/del")
     public String remove(Model model,
                          @PathVariable Integer id) {
-        productDao.deleteById(id);
-//        if (!) {
-//            model.addAttribute("id", id);
-//            return "404";
-//        };
+        if (productDao.deleteProductById(id) == 0) {
+            model.addAttribute("id", id);
+            return "404";
+        };
 
         return "redirect:/goods";
     }
