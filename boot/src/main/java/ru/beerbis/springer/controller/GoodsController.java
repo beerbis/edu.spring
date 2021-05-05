@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.beerbis.springer.model.Product;
 import ru.beerbis.springer.repo.ProductDao;
 
+import javax.transaction.Transactional;
+
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
@@ -39,16 +41,17 @@ public class GoodsController {
     }
 
     @PostMapping("/save")
+    @Transactional
     public String save(Model model, Product product) {
-//        if (product.getId() == newProductPlaceholder.getId()) {
-//            productDao.save(product);
-//        } else
-        productDao.save(product);
-//        if (!)  {
-//            model.addAttribute("id", product.getId());
-//            return "404";
-//        };
-        
+        if (product.getId() == newProductPlaceholder.getId()) {
+            productDao.save(product);
+        } else
+        if (!productDao.existsLockingById(product.getId()))  {
+            model.addAttribute("id", product.getId());
+            return "404";
+        } else {
+            productDao.save(product);
+        }
         return "redirect:/goods";
     }
 
