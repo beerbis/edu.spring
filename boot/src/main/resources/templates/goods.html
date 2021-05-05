@@ -3,6 +3,29 @@
 <head>
   <title>Ассортимент</title>
   <style>
+    html {
+      height: available;
+      width: available;
+    }
+    .contentWrapper {
+      width: 800pt;
+      height: available;
+      margin: 0 auto;
+      padding: 5px;
+      position: relative;
+      background-color: #ffeedd;
+    }
+    #body {
+      margin-bottom: 20pt;
+    }
+    #footer {
+      width: 100%;
+      height: 20pt;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      text-align: right;
+    }
     th {
       border-bottom: black thin dashed;
     }
@@ -10,36 +33,45 @@
       border-right: black thin dashed;
       padding: 0 5px 0 10px;
     }
+
     .numeric {
       text-align: right;
+    }
+    .even {
+      background-color: #ffe8d3;
     }
   </style>
 </head>
 
 <body>
-<h1>Все известные позиции:</h1>
-  <table width="640px">
-    <tr>
-      <th>id</th>
-      <th>наименование</th>
-      <th>цена</th>
-      <th></th>
-    </tr>
-    <tr th:each="product : ${products}">
-      <td th:text="${product.id}" class="numeric"/>
-      <td th:text="${product.title}"/>
-      <td th:text="${product.cost} + ' &#20803;'" class="numeric"/>
-      <td>
-        <a th:href="'/goods/id' + ${product.id} + '/edit'">edit</a>,
-        <a th:href="'/goods/id' + ${product.id} + '/del'">del</a>
-      </td>
-    </tr>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td><a href="/goods/new">new</a></td>
-    </tr>
-  </table>
+  <div id="body" class="contentWrapper">
+    <h1>Все известные позиции:</h1>
+    <table>
+      <tr>
+        <th>id</th>
+        <th>наименование</th>
+        <th>цена</th>
+        <th></th>
+      </tr>
+      <tr th:each="product, iter : ${products}" th:class="${iter.even} ? 'even'">
+        <td th:text="${product.id}" class="numeric">666</td>
+        <td th:text="${product.title}">Шаровары вячеслава</td>
+        <td th:text="${product.cost}" class="numeric">999</td>
+        <td>
+          <a href="/" th:href="'/goods/id' + ${product.id} + '/edit'">edit</a>,
+          <a href="/" th:href="'/goods/id' + ${product.id} + '/del'">del</a>
+        </td>
+      </tr>
+      <tr>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a href="/goods/new">new</a></td>
+      </tr>
+    </table>
+  </div>
+  <div id="footer">
+    <div  class="contentWrapper" th:text="#{copyright} + '&copy ' + ${#dates.year(#dates.createNow())}">ХХХ&copy</div>
+  </div>
 </body>
 </html>
