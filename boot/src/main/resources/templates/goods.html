@@ -26,6 +26,9 @@
       bottom: 0;
       text-align: right;
     }
+    table {
+      min-width: 70%;
+    }
     th {
       border-bottom: black thin dashed;
     }
@@ -39,6 +42,28 @@
     }
     .even {
       background-color: #ffe8d3;
+    }
+    .action a,
+    .pageIdx a {
+      display: inline-block;
+      border-radius: 5px;
+      font-family: monospace;
+      text-decoration: none;
+      background-color: #EEEEEE;
+      color: #333333;
+      margin: 1px 2px;
+      padding: 2px 6px 2px 6px;
+      border-top: 1px solid #CCCCCC;
+      border-right: 1px solid #333333;
+      border-bottom: 1px solid #333333;
+      border-left: 1px solid #CCCCCC;
+    }
+    .pageIdx {
+      margin-top: 10px;
+    }
+    #currentPageIdx {
+      background-color: #333333;
+      color: #EEEEEE;
     }
   </style>
 </head>
@@ -57,8 +82,8 @@
         <td th:text="${product.id}" class="numeric">666</td>
         <td th:text="${product.title}">Шаровары вячеслава</td>
         <td th:text="${product.cost}" class="numeric">999</td>
-        <td>
-          <a href="/" th:href="'/goods/id' + ${product.id} + '/edit'">edit</a>,
+        <td class="action">
+          <a href="/" th:href="'/goods/id' + ${product.id} + '/edit'">edit</a>
           <a href="/" th:href="'/goods/id' + ${product.id} + '/del'">del</a>
         </td>
       </tr>
@@ -66,9 +91,18 @@
         <td></td>
         <td></td>
         <td></td>
-        <td><a href="/goods/new">new</a></td>
+        <td class="action"><a href="/goods/new">new</a></td>
       </tr>
     </table>
+    <div class="pageIdx"
+         th:with="pageSpreading=${T(Integer).valueOf(3)}">
+      <a th:if="${page - pageSpreading > 1}" href="?page=1">1</a>
+      <a th:each="idx: ${#numbers.sequence(T(Math).max(1, T(Math).min(page, maxPage) - pageSpreading), T(Math).min(page + pageSpreading, maxPage))}"
+         th:href="${idx != page}? ('?page=' + ${idx})"
+         th:id="${idx == page}? 'currentPageIdx'"
+         th:text="${idx}">100</a>
+      <a th:if="${page + pageSpreading < maxPage} " th:href="'?page=' + ${maxPage}" th:text="${maxPage}">999</a>
+    </div>
   </div>
   <div id="footer">
     <div  class="contentWrapper" th:text="#{copyright} + '&copy ' + ${#dates.year(#dates.createNow())}">ХХХ&copy</div>
