@@ -83,15 +83,15 @@
         <td th:text="${product.title}">Шаровары вячеслава</td>
         <td th:text="${product.cost}" class="numeric">999</td>
         <td class="action">
-          <a href="/" th:href="'/goods/id' + ${product.id} + '/edit'">edit</a>
-          <a href="/" th:href="'/goods/id' + ${product.id} + '/del'">del</a>
+          <a href="/" th:href="@{/goods/id{id}/edit (id=${product.id})}">edit</a>
+          <a href="/" th:href="@{/goods/id{id}/del  (id=${product.id})}">del</a>
         </td>
       </tr>
       <tr>
         <td></td>
         <td></td>
         <td></td>
-        <td class="action"><a href="/goods/new">new</a></td>
+        <td class="action"><a href="/" th:href="@{/goods/new}">new</a></td>
       </tr>
     </table>
     <div class="pageIdx"
@@ -105,7 +105,7 @@
     </div>
   </div>
   <div id="footer">
-    <div  class="contentWrapper" th:text="#{copyright} + '&copy ' + ${#dates.year(#dates.createNow())}">ХХХ&copy</div>
+    <div class="contentWrapper" th:text="#{copyright} + '&copy ' + ${#dates.year(#dates.createNow())}">ХХХ&copy</div>
   </div>
 </body>
 </html>
