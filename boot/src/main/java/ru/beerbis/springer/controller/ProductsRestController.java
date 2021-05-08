@@ -1,7 +1,6 @@
 package ru.beerbis.springer.controller;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.beerbis.springer.model.Product;
 import ru.beerbis.springer.repo.ProductDao;
@@ -61,17 +60,5 @@ public class ProductsRestController {
 
         product.setId(id);
         return productDao.save(product);
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    ResponseEntity<Object> onNotFoundError(EntityNotFound e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String onNotFoundError(ForbiddenInputValue e) {
-        return e.getMessage();
     }
 }
