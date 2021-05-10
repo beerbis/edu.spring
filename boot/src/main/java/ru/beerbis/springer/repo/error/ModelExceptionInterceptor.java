@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * <h2>Перехватчик исключений работы с моделью/данными БД
@@ -18,14 +17,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ModelExceptionInterceptor {
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    ResponseEntity<Object> onNotFoundError(EntityNotFound e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    ResponseEntity<Object> onError(EntityNotFound e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(e.getMessage());
     }
 
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    String onNotFoundError(ForbiddenInputValue e) {
-        return e.getMessage();
+    ResponseEntity<Object> onError(ForbiddenInputValue e) {
+        return ResponseEntity
+                .badRequest()
+                .body(e.getMessage());
     }
 }
