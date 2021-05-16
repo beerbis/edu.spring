@@ -12,10 +12,6 @@ import static java.util.Objects.requireNonNull;
 @Entity
 @Table(name = "product",
         uniqueConstraints = {@UniqueConstraint(name = "UQ_PRODUCT_TITLE", columnNames = "title")})
-@NamedQueries({
-        @NamedQuery(name = "Product.all", query = "select p from Product p order by p.id"),
-        @NamedQuery(name = "Product.del", query = "delete from Product p where p.id = :id")
-})
 public class Product extends BaseEntity<Integer> {
 
     @Column(name = "title", nullable = false)

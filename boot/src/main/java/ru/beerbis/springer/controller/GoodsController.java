@@ -1,17 +1,21 @@
 package ru.beerbis.springer.controller;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import ru.beerbis.springer.model.Product;
 import ru.beerbis.springer.repo.ProductDao;
+
+import javax.transaction.Transactional;
+
+import static java.lang.Math.max;
+import static java.util.Objects.requireNonNullElse;
 
 @Controller
 @RequestMapping("/goods")
 public class GoodsController {
+    private final static Integer ITEM_PER_PAGE = 5;
     private static final Product newProductPlaceholder = new Product("новое новьё", 0);
     private final ProductDao productDao;
 
@@ -20,8 +24,13 @@ public class GoodsController {
     }
 
     @GetMapping
-    public String listAll(Model model) {
-        model.addAttribute("products", productDao.findAll());
+    public String listAll(Model model,
+                          @RequestParam(required = false) Integer page) {
+        final var pageIdx = max(requireNonNullElse(page, 1), 1);
+        final var items = productDao.findAll(PageRequest.of(pageIdx - 1, ITEM_PER_PAGE));
+        model.addAttribute("page", pageIdx);
+        model.addAttribute("maxPage", items.getTotalPages());
+        model.addAttribute("products", items.iterator());
         return "goods";
     }
 
@@ -39,16 +48,17 @@ public class GoodsController {
     }
 
     @PostMapping("/save")
+    @Transactional
     public String save(Model model, Product product) {
-//        if (product.getId() == newProductPlaceholder.getId()) {
-//            productDao.save(product);
-//        } else
-        productDao.save(product);
-//        if (!)  {
-//            model.addAttribute("id", product.getId());
-//            return "404";
-//        };
-        
+        if (product.getId() == newProductPlaceholder.getId()) {
+            productDao.save(product);
+        } else
+        if (!productDao.existsLockingById(product.getId()))  {
+            model.addAttribute("id", product.getId());
+            return "404";
+        } else {
+            productDao.save(product);
+        }
         return "redirect:/goods";
     }
 
@@ -61,11 +71,10 @@ public class GoodsController {
     @GetMapping("/id{id}/del")
     public String remove(Model model,
                          @PathVariable Integer id) {
-        productDao.deleteById(id);
-//        if (!) {
-//            model.addAttribute("id", id);
-//            return "404";
-//        };
+        if (productDao.deleteProductById(id) == 0) {
+            model.addAttribute("id", id);
+            return "404";
+        };
 
         return "redirect:/goods";
     }
